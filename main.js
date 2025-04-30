@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
+const WebSocket = require('ws')
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -65,3 +66,24 @@ ipcMain.handle('load-model-data', async () => {
     return { success: false, error: error.message }
   }
 })
+
+// WebSocket 连接
+const ws = new WebSocket('wss://3d-game.你的域名.workers.dev');
+
+ws.onopen = () => {
+  console.log('WebSocket 连接已建立');
+};
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  // 处理接收到的消息
+  console.log('收到消息:', data);
+};
+
+ws.onerror = (error) => {
+  console.error('WebSocket 错误:', error);
+};
+
+ws.onclose = () => {
+  console.log('WebSocket 连接已关闭');
+};
